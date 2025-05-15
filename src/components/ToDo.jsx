@@ -1,19 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddTodo from "./AddTodo";
 import TodoList from './TodoList';
 
 let nextId = 1;
-const initialTodos = [{id: 0, title: "Todo Example", done: true}];
+const initialTodos = [{id: 0, title: "Todo Example", date: "", time: "", location: "", done: true}];
 
 function ToDo() {
-    const [todos, setTodos] = useState(initialTodos);
+    // Taken ophalen uit localStorage bij laden
+    const [todos, setTodos] = useState(() => {
+      const saved = localStorage.getItem('todos');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.length > 0) {
+          nextId = Math.max(...parsed.map(t => t.id)) + 1;
+        }
+        return parsed;
+      }
+      return initialTodos;
+    });
 
-    function addTodo(title) {
+    // Taken opslaan in localStorage bij elke wijziging
+    useEffect(() => {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos]);
+
+    function addTodo(title, date, time, location) {
         setTodos([
             ...todos,
             {
                 id: nextId++,
-                title: title,
+                title,
+                date,
+                time,
+                location,
                 done: false
             },
         ]);
@@ -21,18 +40,16 @@ function ToDo() {
 
     function editToDo(nextTodo) {
         setTodos(
-            todos.map((todo) => {
-                if (todo.id === nextTodo.id) {
-                    return nextTodo;
-                } else {
-                    return todo;
-                }
-            })
+            todos.map((todo) => (todo.id === nextTodo.id ? nextTodo : todo))
         );
     }
 
     function deleteTodo(todoId) {
         setTodos(todos.filter((todo) => todo.id !== todoId));
+    }
+
+    function clearCompleted() {
+        setTodos(todos.filter(todo => !todo.done));
     }
 
     return (
@@ -45,6 +62,7 @@ function ToDo() {
           todos={todos}
           onChangeToDo={editToDo}
           onDeleteToDo={deleteTodo}
+          onClearCompleted={clearCompleted}
         />
       </div>
     );

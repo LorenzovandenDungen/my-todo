@@ -27,23 +27,35 @@ function TodoList({ todos, onChangeToDo, onDeleteToDo, onClearCompleted }) {
 
       {/* De todo's zelf */}
       <ul className="mt-4 space-y-2">
-        {todos.map((todo, idx) => (
+        {todos.map((todo) => (
           <li
             key={todo.id}
             className="flex items-center justify-between px-0 py-2 border-b border-neutral-800 last:border-0"
           >
-            <div className="flex items-center gap-2 flex-1">
+            {/* Linkerzijde: details */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1">
+              <span className={todo.done ? "line-through text-neutral-500" : ""}>
+                {todo.title}
+              </span>
+              {/* Datum, tijd en locatie */}
+              {todo.date && (
+                <span className="text-xs text-neutral-400 ml-2">{todo.date}</span>
+              )}
+              {todo.time && (
+                <span className="text-xs text-neutral-400 ml-2">{todo.time}</span>
+              )}
+              {todo.location && (
+                <span className="text-xs text-neutral-400 ml-2">{todo.location}</span>
+              )}
+            </div>
+            {/* Rechterzijde: checkbox en delete */}
+            <div className="flex items-center gap-2 ml-2">
               <input
                 type="checkbox"
                 checked={todo.done}
                 onChange={() => onChangeToDo({ ...todo, done: !todo.done })}
+                className="h-4 w-4"
               />
-              <span className={todo.done ? "line-through text-neutral-500" : ""}>
-                {todo.title}
-              </span>
-            </div>
-            <div className="flex gap-1">
-              {/* Edit knop kan je nog toevoegen als je wilt */}
               <button
                 className="text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-700 text-white"
                 onClick={() => onDeleteToDo(todo.id)}
