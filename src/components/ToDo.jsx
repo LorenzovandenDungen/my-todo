@@ -2,70 +2,78 @@ import { useState, useEffect } from 'react';
 import AddTodo from "./AddTodo";
 import TodoList from './TodoList';
 
-let nextId = 1;
-const initialTodos = [{id: 0, title: "Todo Example", date: "", time: "", location: "", done: true}];
+const API_URL = 'http://localhost:3001';
 
 function ToDo() {
-    // Taken ophalen uit localStorage bij laden
-    const [todos, setTodos] = useState(() => {
-      const saved = localStorage.getItem('todos');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.length > 0) {
-          nextId = Math.max(...parsed.map(t => t.id)) + 1;
-        }
-        return parsed;
-      }
-      return initialTodos;
-    });
+  const [todos, setTodos] = useState([]);
 
-    // Taken opslaan in localStorage bij elke wijziging
-    useEffect(() => {
-      localStorage.setItem('todos', JSON.stringify(todos));
-    }, [todos]);
+  // Taken ophalen bij laden en als er iets verandert
+  function fetchTodos() {
+    fetch(`${API_URL}/todos`)
+      .then(res => res.json())
+      .then(data => setTodos(data));
+  }
 
-    function addTodo(title, date, time, location) {
-        setTodos([
-            ...todos,
-            {
-                id: nextId++,
-                title,
-                date,
-                time,
-                location,
-                done: false
-            },
-        ]);
-    }
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
-    function editToDo(nextTodo) {
-        setTodos(
-            todos.map((todo) => (todo.id === nextTodo.id ? nextTodo : todo))
-        );
-    }
+  // Taak toevoegen via backend
+  function addTodo(title, date, time, location) {
+    const newTodo = {
+      id: Date.now(), // Mag ook zonder, backend mag id's maken
+      title,
+      date,
+      time,
+      location,
+      done: false,
+    };
+    fetch(`${API_URL}/todos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTodo),
+    })
+    .then(res => res.json())
+    .then(() => fetchTodos());
+  }
 
-    function deleteTodo(todoId) {
-        setTodos(todos.filter((todo) => todo.id !== todoId));
-    }
+  // Taak verwijderen via backend (nog niet in backend, dus alleen frontend)
+  function deleteTodo(todoId) {
+    // TODO: Maak een DELETE endpoint in je backend!
+    // fetch(`${API_URL}/todos/${todoId}`, { method: 'DELETE' })
+    //   .then(() => fetchTodos());
 
-    function clearCompleted() {
-        setTodos(todos.filter(todo => !todo.done));
-    }
+    // Voor nu: alleen uit de frontend verwijderen
+    setTodos(todos.filter((todo) => todo.id !== todoId));
+  }
 
-    return (
-      <div>
-        <h1 className="text-xl font-semibold text-white mb-6 text-center">
-          Mijn Minimal To-Do
-        </h1>
-        <AddTodo onAddToDo={addTodo} />
-        <TodoList
-          todos={todos}
-          onChangeToDo={editToDo}
-          onDeleteToDo={deleteTodo}
-          onClearCompleted={clearCompleted}
-        />
-      </div>
+  // Edit en clear completed kan ook via backend met extra endpoints!
+  function editToDo(nextTodo) {
+    // TODO: PATCH/PUT endpoint maken voor echte backend sync
+    setTodos(
+      todos.map((todo) => (todo.id === nextTodo.id ? nextTodo : todo))
     );
+  }
+
+  function clearCompleted() {
+    // TODO: Endpoint maken die alle completed taken verwijderd
+    setTodos(todos.filter(todo => !todo.done));
+  }
+
+  return (
+    <div>
+      <h1 className="text-xl font-semibold text-white mb-6 text-center">
+        Mijn Minimal To-Do
+      </h1>
+      <AddTodo onAddToDo={addTodo} />
+      <TodoList
+        todos={todos}
+        onChangeToDo={editToDo}
+        onDeleteToDo={deleteTodo}
+        onClearCompleted={clearCompleted}
+      />
+    </div>
+  );
 }
 
 export default ToDo;
