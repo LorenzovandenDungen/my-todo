@@ -7,7 +7,7 @@ const API_URL = 'http://localhost:3001';
 function ToDo() {
   const [todos, setTodos] = useState([]);
 
-  // Taken ophalen bij laden en als er iets verandert
+  // Taken ophalen bij laden en na elke wijziging
   function fetchTodos() {
     fetch(`${API_URL}/todos`)
       .then(res => res.json())
@@ -21,7 +21,7 @@ function ToDo() {
   // Taak toevoegen via backend
   function addTodo(title, date, time, location) {
     const newTodo = {
-      id: Date.now(), // Mag ook zonder, backend mag id's maken
+      id: Date.now(), // Of laat backend een id genereren
       title,
       date,
       time,
@@ -37,27 +37,26 @@ function ToDo() {
     .then(() => fetchTodos());
   }
 
-  // Taak verwijderen via backend (nog niet in backend, dus alleen frontend)
+  // Verwijder een taak via backend
   function deleteTodo(todoId) {
-    // TODO: Maak een DELETE endpoint in je backend!
-    // fetch(`${API_URL}/todos/${todoId}`, { method: 'DELETE' })
-    //   .then(() => fetchTodos());
-
-    // Voor nu: alleen uit de frontend verwijderen
-    setTodos(todos.filter((todo) => todo.id !== todoId));
+    fetch(`${API_URL}/todos/${todoId}`, { method: 'DELETE' })
+      .then(() => fetchTodos());
   }
 
-  // Edit en clear completed kan ook via backend met extra endpoints!
+  // Pas een taak aan via backend
   function editToDo(nextTodo) {
-    // TODO: PATCH/PUT endpoint maken voor echte backend sync
-    setTodos(
-      todos.map((todo) => (todo.id === nextTodo.id ? nextTodo : todo))
-    );
+    fetch(`${API_URL}/todos/${nextTodo.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nextTodo),
+    })
+    .then(() => fetchTodos());
   }
 
+  // Verwijder alle voltooide taken via backend
   function clearCompleted() {
-    // TODO: Endpoint maken die alle completed taken verwijderd
-    setTodos(todos.filter(todo => !todo.done));
+    fetch(`${API_URL}/todos`, { method: 'DELETE' })
+      .then(() => fetchTodos());
   }
 
   return (
