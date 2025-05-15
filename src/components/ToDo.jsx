@@ -35,9 +35,11 @@ function ToDo() {
         setTodos(todos.filter((todo) => todo.id !== todoId));
     }
 
-  return (
-    <>
+    return (
       <div>
+        <h1 className="text-xl font-semibold text-white mb-6 text-center">
+          Mijn Minimal To-Do
+        </h1>
         <AddTodo onAddToDo={addTodo} />
         <TodoList
           todos={todos}
@@ -45,8 +47,7 @@ function ToDo() {
           onDeleteToDo={deleteTodo}
         />
       </div>
-    </>
-  );
+    );
 }
 
 export default ToDo;

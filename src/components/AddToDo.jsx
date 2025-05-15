@@ -4,21 +4,22 @@ function AddTodo({ onAddToDo }) {
   const [title, setTitle] = useState("");
 
   return (
-    <div>
+    <div className="flex gap-2 mb-6">
       <input
-        placeholder="Add a new task"
+        className="flex-1 rounded-md px-3 py-2 bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-blue-500"
+        placeholder="Nieuwe taak..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      {title.length === 0 && <small> Type a task to add</small>}
       <button
+        className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition"
         onClick={() => {
           setTitle("");
           onAddToDo(title);
         }}
-        disabled={title.length === 0}
+        disabled={title.trim() === ""}
       >
-        Add Task
+        Toevoegen
       </button>
     </div>
   );
