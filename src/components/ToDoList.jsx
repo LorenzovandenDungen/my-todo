@@ -1,4 +1,6 @@
-function TodoList({ todos, onChangeToDo, onDeleteToDo, onClearCompleted }) {
+import ToDoItem from './ToDoItem';
+
+function ToDoList({ todos, onChangeToDo, onDeleteToDo, onClearCompleted }) {
   const completedCount = todos.filter(todo => todo.done).length;
 
   return (
@@ -25,39 +27,50 @@ function TodoList({ todos, onChangeToDo, onDeleteToDo, onClearCompleted }) {
         </button>
       )}
 
-      {/* De todo's zelf */}
-      <ul className="mt-4 space-y-2">
+      {/* De todo's zelf, elk in een eigen card */}
+      <ul className="mt-8 flex flex-col gap-6">
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className="flex items-center justify-between px-0 py-2 border-b border-neutral-800 last:border-0"
+            className={`
+        bg-neutral-900 
+        rounded-2xl 
+        shadow-lg 
+        px-6 py-4 
+        flex items-center justify-between
+        border border-white
+        transition-all
+        hover:border-blue-600
+        hover:shadow-2xl
+      `}
           >
             {/* Linkerzijde: details */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1">
-              <span className={todo.done ? "line-through text-neutral-500" : ""}>
+            <div className="flex flex-col gap-1 flex-1 min-w-0">
+              <span className={`font-medium text-base truncate ${todo.done ? "line-through text-neutral-500" : "text-white"}`}>
                 {todo.title}
               </span>
-              {/* Datum, tijd en locatie */}
-              {todo.date && (
-                <span className="text-xs text-neutral-400 ml-2">{todo.date}</span>
-              )}
-              {todo.time && (
-                <span className="text-xs text-neutral-400 ml-2">{todo.time}</span>
-              )}
-              {todo.location && (
-                <span className="text-xs text-neutral-400 ml-2">{todo.location}</span>
-              )}
+              <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                {todo.date && (
+                  <span className="text-xs text-neutral-400">{todo.date}</span>
+                )}
+                {todo.time && (
+                  <span className="text-xs text-neutral-400">{todo.time}</span>
+                )}
+                {todo.location && (
+                  <span className="text-xs text-neutral-400">{todo.location}</span>
+                )}
+              </div>
             </div>
-            {/* Rechterzijde: checkbox en delete */}
-            <div className="flex items-center gap-2 ml-2">
+            {/* Rechterzijde: acties */}
+            <div className="flex items-center gap-3 ml-6 flex-shrink-0">
               <input
                 type="checkbox"
                 checked={todo.done}
                 onChange={() => onChangeToDo({ ...todo, done: !todo.done })}
-                className="h-4 w-4"
+                className="h-5 w-5 accent-blue-600"
               />
               <button
-                className="text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-700 text-white"
+                className="text-xs px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow"
                 onClick={() => onDeleteToDo(todo.id)}
               >
                 Delete
@@ -66,8 +79,9 @@ function TodoList({ todos, onChangeToDo, onDeleteToDo, onClearCompleted }) {
           </li>
         ))}
       </ul>
+
     </div>
   );
 }
 
-export default TodoList;
+export default ToDoList;
