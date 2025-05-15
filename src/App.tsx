@@ -2,8 +2,8 @@ import ToDo from './components/ToDo';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8">
+    <div className="min-h-screen bg-neutral-950 flex justify-center pt-20">
+      <div className="w-full max-w-sm bg-neutral-900 rounded-xl shadow-lg p-6">
         <div>
           <ToDo />
         </div>
