@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AddTodo from "./AddTodo";
 import TodoList from './TodoList';
 
-const API_URL = 'https://backend-h9j4.onrender.com';
+const API_URL = 'https://backend-cuhi.onrender.com';
 
 function ToDo() {
   const [todos, setTodos] = useState([]);
