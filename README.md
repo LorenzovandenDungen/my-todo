@@ -1,6 +1,20 @@
-# React + TypeScript + Vite
+# To-Do Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small to-do list built with React, TypeScript and Vite. Tasks are stored through a backend API.
+
+## Getting Started
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
 
 Currently, two official plugins are available:
 
