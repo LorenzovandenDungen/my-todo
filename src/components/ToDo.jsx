@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import AddTodo from "./AddTodo";
+import AddTodo from './AddToDo';
 import TodoList from './TodoList';
 
 const API_URL = 'https://backend-cuhi.onrender.com';
