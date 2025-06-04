@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src", "jest.setup.ts"]
+}
